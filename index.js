@@ -1,5 +1,5 @@
-const { knex } = require('./connection');
-const { ApolloServer, gql } = require('apollo-server');
+const { knex } = require("./connection");
+const { ApolloServer, gql } = require("apollo-server");
 
 const typeDefs = gql`
   type Employee {
@@ -7,42 +7,42 @@ const typeDefs = gql`
     name: String!
     email: String!
   }
-  
+
   type Query {
-    employees: [Employee],
+    employees: [Employee]
     employee(id: ID!): [Employee]
   }
 `;
 
 const resolvers = {
-    Query: {
-      employees: async() => await getEmployees(),
-      employee: async (parent, args, context, info) => {
-        const id = args?.id
-        return await getEmployee(id);
-      }
-    }
+  Query: {
+    employees: async () => await getEmployees(),
+    employee: async (parent, args, context, info) => {
+      const id = args?.id;
+      return id ? await getEmployee(id) : {};
+    },
+  },
 };
 
 async function getEmployees() {
-    const result = await knex.select().from('myTable');
-    return result;
+  const result = await knex.select().from("myTable");
+  return result;
 }
 
 async function getEmployee(id) {
-  const result = await knex.select('*').from('myTable').where('id', id)
-  return result
+  const result = await knex.select("*").from("myTable").where("id", id);
+  return result;
 }
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    csrfPrevention: true,
+  typeDefs,
+  resolvers,
+  csrfPrevention: true,
 });
-  
-  // The `listen` method launches a web server.
+
+// The `listen` method launches a web server.
 server.listen().then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
+  console.log(`🚀  Server ready at ${url}`);
 });
 
 /*(async() => {
