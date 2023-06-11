@@ -2,25 +2,36 @@ const { knex } = require('./connection');
 const { ApolloServer, gql } = require('apollo-server');
 
 const typeDefs = gql`
-  type Student {
+  type Employee {
     id: ID!
     name: String!
+    email: String!
   }
   
   type Query {
-    students: [Student]
+    employees: [Employee],
+    employee(id: ID!): [Employee]
   }
 `;
 
 const resolvers = {
     Query: {
-      students: async() => await getStudents(),
+      employees: async() => await getEmployees(),
+      employee: async (parent, args, context, info) => {
+        const id = args?.id
+        return await getEmployee(id);
+      }
     }
 };
 
-async function getStudents() {
-    const result = await knex.select().from('student');
+async function getEmployees() {
+    const result = await knex.select().from('myTable');
     return result;
+}
+
+async function getEmployee(id) {
+  const result = await knex.select('*').from('myTable').where('id', id)
+  return result
 }
 
 const server = new ApolloServer({
