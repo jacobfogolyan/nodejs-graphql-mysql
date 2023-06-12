@@ -1,5 +1,5 @@
-const { knex } = require("./connection");
-const { ApolloServer, gql } = require("apollo-server");
+import { knex } from './connection';
+import { ApolloServer, gql } from 'apollo-server';
 
 const typeDefs = gql`
   type Employee {
@@ -17,20 +17,20 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     employees: async () => await getEmployees(),
-    employee: async (parent, args, context, info) => {
-      const id = args?.id;
+    employee: async (parent: any, args: any, context: any, info: any) => {
+      const id: string = args?.id;
       return id ? await getEmployee(id) : {};
     },
   },
 };
 
 async function getEmployees() {
-  const result = await knex.select().from("myTable");
+  const result = await knex.select().from('myTable');
   return result;
 }
 
-async function getEmployee(id) {
-  const result = await knex.select("*").from("myTable").where("id", id);
+async function getEmployee(id: string) {
+  const result = await knex.select('*').from('myTable').where('id', id);
   return result;
 }
 
