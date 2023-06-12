@@ -1,4 +1,4 @@
-import { knex } from './connection';
+import { knex } from './db/connection';
 import { ApolloServer, gql } from 'apollo-server';
 import { Employee } from './types';
 
