@@ -1,7 +1,6 @@
 import { knex } from './connection';
 import { ApolloServer, gql } from 'apollo-server';
 import { Employee } from './types';
-import { resolveObjMapThunk, resolveReadonlyArrayThunk, GraphQLFieldResolver } from 'graphql';
 
 const typeDefs = gql`
   type Employee {
