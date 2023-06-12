@@ -1,38 +1,6 @@
-import { knex } from './db/connection';
-import { ApolloServer, gql } from 'apollo-server';
-import { Employee } from './types';
-import { employeeGraphqlTypeDefs as typeDefs } from './models/employee';
-
-const resolvers = {
-  Query: {
-    employees: async () => await getEmployees(),
-    employee: async (source: any, args: { id: string }, context: any, info: any) => {
-      const id = args.id;
-      return await getEmployee(id);
-    },
-  },
-};
-
-async function getEmployees(): Promise<Employee[]> {
-  const rows: Employee[] = await knex.select().from('myTable');
-  if (!rows.length) {
-    throw new Error('No employees found');
-  }
-
-  const employees: Employee[] = rows;
-  return employees;
-}
-
-async function getEmployee(id: string): Promise<Employee[]> {
-  const rows = await knex.select('*').from('myTable').where('id', id);
-
-  if (!rows.length) {
-    throw new Error(`Employee with ID ${id} not found`);
-  }
-
-  const employee: Employee[] = rows;
-  return employee;
-}
+import { ApolloServer } from 'apollo-server';
+import { employeeGraphqlTypeDefs as typeDefs } from './models/employees';
+import { resolvers } from './resolvers';
 
 const server = new ApolloServer({
   typeDefs,
@@ -40,12 +8,6 @@ const server = new ApolloServer({
   csrfPrevention: true,
 });
 
-// The `listen` method launches a web server.
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
 });
-
-/*(async() => {
-    const students = await getStudents();
-    console.log(students);
-})();*/

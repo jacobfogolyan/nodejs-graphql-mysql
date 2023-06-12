@@ -1,6 +1,6 @@
-import { knex as k } from 'knex';
+import { knex as k, Knex } from 'knex';
 
-const knex = k({
+const knex = k<Knex>({
   client: 'mysql',
   connection: {
     host: '127.0.0.1',
