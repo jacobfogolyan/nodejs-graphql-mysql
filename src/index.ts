@@ -1,5 +1,7 @@
 import { knex } from './connection';
 import { ApolloServer, gql } from 'apollo-server';
+import { Employee } from './types';
+import { resolveObjMapThunk, resolveReadonlyArrayThunk, GraphQLFieldResolver } from 'graphql';
 
 const typeDefs = gql`
   type Employee {
@@ -13,25 +15,35 @@ const typeDefs = gql`
     employee(id: ID!): [Employee]
   }
 `;
-
 const resolvers = {
   Query: {
     employees: async () => await getEmployees(),
-    employee: async (parent: any, args: any, context: any, info: any) => {
-      const id: string = args?.id;
-      return id ? await getEmployee(id) : {};
+    employee: async (source: any, args: { id: string }, context: any, info: any) => {
+      const id = args.id;
+      return await getEmployee(id);
     },
   },
 };
 
-async function getEmployees() {
-  const result = await knex.select().from('myTable');
-  return result;
+async function getEmployees(): Promise<Employee[]> {
+  const rows: Employee[] = await knex.select().from('myTable');
+  if (!rows.length) {
+    throw new Error('No employees found');
+  }
+
+  const employees: Employee[] = rows;
+  return employees;
 }
 
-async function getEmployee(id: string) {
-  const result = await knex.select('*').from('myTable').where('id', id);
-  return result;
+async function getEmployee(id: string): Promise<Employee[]> {
+  const rows = await knex.select('*').from('myTable').where('id', id);
+
+  if (!rows.length) {
+    throw new Error(`Employee with ID ${id} not found`);
+  }
+
+  const employee: Employee[] = rows;
+  return employee;
 }
 
 const server = new ApolloServer({
