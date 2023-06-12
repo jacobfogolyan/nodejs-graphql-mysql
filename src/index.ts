@@ -1,19 +1,8 @@
 import { knex } from './db/connection';
 import { ApolloServer, gql } from 'apollo-server';
 import { Employee } from './types';
+import { employeeGraphqlTypeDefs as typeDefs } from './models/employee';
 
-const typeDefs = gql`
-  type Employee {
-    id: ID!
-    name: String!
-    email: String!
-  }
-
-  type Query {
-    employees: [Employee]
-    employee(id: ID!): [Employee]
-  }
-`;
 const resolvers = {
   Query: {
     employees: async () => await getEmployees(),
