@@ -1,7 +1,5 @@
 # nodejs-graphql-mysql
 
-GraphQL, Node Js, MySql
+Graphql Resolver example
 
-Video Demo & Tutorial:
-
-https://www.youtube.com/watch?v=TqWCkXDhqzY
+Graphql, Mysql, Typescript, Apollo
