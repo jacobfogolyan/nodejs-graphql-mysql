@@ -19,3 +19,8 @@ export async function getEmployee(id: string): Promise<Employee[]> {
 
   return rows;
 }
+
+export async function updateEmployee({ id, name, email }: { id: string; name: string; email: string }) {
+  const employee: Pick<Employee, 'name' | 'email'> = { name, email };
+  return await knex<Employee>('myTable').update(employee).into('myTable').where('id', id);
+}

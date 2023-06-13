@@ -11,4 +11,8 @@ export const employeeGraphqlTypeDefs = gql`
     employees: [Employee]
     employee(id: ID!): [Employee]
   }
+
+  type Mutation {
+    updateEmployee(id: ID!, name: String!, email: String!): Employee
+  }
 `;
